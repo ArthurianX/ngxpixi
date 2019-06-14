@@ -1,6 +1,6 @@
 {
   "name": "ngxpixi",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "peerDependencies": {
     "@angular/common": "^8.0.0",
     "@angular/core": "^8.0.0",
@@ -9,5 +9,28 @@
     "pixi.js": "^5.0.4",
     "pixi-filters": "^3.0.3",
     "rxjs": "~6.4.0"
-  }
+  },
+  "description": "### Everything here is copied from their repository and made to work with PIXI 5 and Angular 8.",
+  "main": "karma.conf.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ArthurianX/ngxpixi.git"
+  },
+  "keywords": [
+    "PIXI",
+    "PIXI",
+    "5",
+    "Angular",
+    "Angular",
+    "8"
+  ],
+  "author": "Arthur Kovacs",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ArthurianX/ngxpixi/issues"
+  },
+  "homepage": "https://github.com/ArthurianX/ngxpixi#readme"
 }
