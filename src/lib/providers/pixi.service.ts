@@ -1,6 +1,6 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
-import * as PIXI from "pixi.js";
+import * as PIXI from 'pixi.js';
 
 /*
   Generated class for the Pixi provider.
@@ -30,19 +30,20 @@ export class PixiService {
   constructor() { }
 
   animate(t) {
-    let self = this;
+    const self = this;
     this.time = new Date().getTime() / 1000;
 
-    let deltaTime = this.time - this.last_time;
+    const deltaTime = this.time - this.last_time;
 
-    if (typeof this.worldStage != "undefined")
+    if (typeof this.worldStage != 'undefined') {
       if (this.worldStage) {
-        for (let s in this.to_render) this.to_render[s].update(deltaTime);
+        for (const s in this.to_render) { this.to_render[s].update(deltaTime); }
 
-        for (let c in this.anim_loop_callbacks) this.anim_loop_callbacks[c]();
+        for (const c in this.anim_loop_callbacks) { this.anim_loop_callbacks[c](); }
 
         this.renderer.render(this.worldStage);
       }
+    }
     this.last_time = this.time;
 
     requestAnimationFrame(t => {
@@ -51,46 +52,52 @@ export class PixiService {
   }
 
   appendRenderer(id) {
-    //Add canvas to page
-    let el = document.getElementById(id);
+    // Add canvas to page
+    const el = document.getElementById(id);
 
-    if (el) el.appendChild(this.renderer.view);
+    if (el) { el.appendChild(this.renderer.view); }
   }
 
   sizeCollection(el, args) {
-    //Get current ratio
-    let ratio = this.renderer.width / this.renderer.height;
+    // Get current ratio
+    const ratio = this.renderer.width / this.renderer.height;
 
-    //Get current width
-    let old_w = this.renderer.width;
+    // Get current width
+    const old_w = this.renderer.width;
 
     let w = el.width();
 
-    //Get new width
-    if (typeof args != "undefined") w = args.width;
+    // Get new width
+    if (typeof args != 'undefined') { w = args.width; }
 
-    //Resize to match width
-    let perChange = this.worldStage.scale.x * ((old_w - w) / old_w);
+    // Resize to match width
+    const perChange = this.worldStage.scale.x * ((old_w - w) / old_w);
     this.renderer.resize(w, window.innerHeight);
 
-    //Scale Stage based on % change of screen width
+    // Scale Stage based on % change of screen width
     this.worldStage.scale.x -= this.worldStage.scale.x * ((old_w - w) / old_w);
     this.worldStage.scale.y = this.worldStage.scale.x;
   }
 
-  init(width, height, el) {
-    //Initialize game container
-    this.app = new PIXI.Application({
-      width: width,
-      height: height,
+  init(width, height, el, autoResize, resizeElement) {
+
+    const options = {
+      width,
+      height,
       transparent: true,
       antialias: true,
       view: el
-    });
+    };
+
+    if (autoResize) {
+      options['resizeTo'] = resizeElement;
+    }
+    // Initialize game container
+    this.app = new PIXI.Application(options);
 
     this.renderer = this.app.renderer;
     this.renderer.resolution = window.devicePixelRatio;
-    this.renderer.rootRenderTarget.resolution = window.devicePixelRatio;
+    // this.renderer.rootRenderTarget.resolution = window.devicePixelRatio;
     this.renderer.resize(width - 1, height);
     this.renderer.resize(
       width,
@@ -100,9 +107,9 @@ export class PixiService {
 
     this.worldStage = new PIXI.Container();
 
-    //Initialize game camera
-    let w = this.renderer.width;
-    let h = this.renderer.height;
+    // Initialize game camera
+    const w = this.renderer.width;
+    const h = this.renderer.height;
 
     this.ratio = w / h;
     this.starting_width = w;

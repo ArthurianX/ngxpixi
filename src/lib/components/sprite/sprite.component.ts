@@ -4,7 +4,7 @@ import { TweenLite, Circ, Sine, SlowMo, Power4 } from "gsap";
 
 @Component({
   selector: "sprite",
-  template: "<span></span>"
+  template: '<span></span>'
 })
 export class SpriteComponent {
   @Input()
