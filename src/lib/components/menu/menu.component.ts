@@ -1,9 +1,9 @@
-import { Component, Input } from "@angular/core";
-import * as PIXI from "pixi.js";
+import { Component, Input } from '@angular/core';
+import * as PIXI from 'pixi.js';
 
 @Component({
-  selector: "menu",
-  template: "<span></span>"
+  selector: 'menu',
+  template: '<span></span>'
 })
 export class MenuComponent {
   @Input() container: PIXI.Container = null;
@@ -28,7 +28,7 @@ export class MenuComponent {
   ngOnInit() {
     this.initMenuContainer();
 
-    if (this.isScrollable) this.initInteraction();
+    if (this.isScrollable) { this.initInteraction(); }
 
     this.positionContainer();
     this.positionItems();
@@ -48,22 +48,22 @@ export class MenuComponent {
   }
 
   initInteraction() {
-    let self = this;
+    const self = this;
     this.menuContainer.interactive = true;
 
     this.menuContainer
-      .on("mousedown", this.stageMouseDown.bind(this))
-      .on("touchstart", this.stageMouseDown.bind(this));
+      .on('mousedown', this.stageMouseDown.bind(this))
+      .on('touchstart', this.stageMouseDown.bind(this));
 
     this.menuContainer
-      .on("mouseupoutside", this.stageMouseUp.bind(this))
-      .on("mouseup", this.stageMouseUp.bind(this))
-      .on("touchendoutside", this.stageMouseUp.bind(this))
-      .on("touchend", this.stageMouseUp.bind(this));
+      .on('mouseupoutside', this.stageMouseUp.bind(this))
+      .on('mouseup', this.stageMouseUp.bind(this))
+      .on('touchendoutside', this.stageMouseUp.bind(this))
+      .on('touchend', this.stageMouseUp.bind(this));
 
     this.menuContainer
-      .on("mousemove", this.stageMove.bind(this))
-      .on("touchmove", this.stageMove.bind(this));
+      .on('mousemove', this.stageMove.bind(this))
+      .on('touchmove', this.stageMove.bind(this));
   }
 
   getViewport() {
@@ -74,63 +74,66 @@ export class MenuComponent {
   }
 
   distanceFromCenter(i: number) {
-    let child = this.menuContainer.children[i];
+    const child = this.menuContainer.children[i];
 
-    if (!child) return 0;
+    if (!child) { return 0; }
 
-    let vMin = this.getViewport().min;
-    let vMax = this.getViewport().max;
-    let center = this.w / 2;
-    let itemX = child.transform.worldTransform.tx + child.getBounds().width / 2;
-    let distX = Math.abs(itemX - center);
+    const vMin = this.getViewport().min;
+    const vMax = this.getViewport().max;
+    const center = this.w / 2;
+    const itemX = child.transform.worldTransform.tx + child.getBounds().width / 2;
+    const distX = Math.abs(itemX - center);
 
     return distX;
   }
 
   positionItems() {
-    for (var c in this.menuContainer.children) {
-      let child = this.menuContainer.children[c];
-      if (!child) continue;
+    for (const c in this.menuContainer.children) {
+      const child = this.menuContainer.children[c];
+      if (!child) { continue; }
 
       if (
         !(child instanceof PIXI.Sprite) &&
         !(child instanceof PIXI.Container) &&
         !(child instanceof PIXI.Text)
-      )
+      ) {
         return;
+      }
 
-      if (child.children.length <= 1) continue;
+      if (child.children.length <= 1) { continue; }
 
-      let pos = this.calculateItemPosition(parseInt(c));
+      const pos = this.calculateItemPosition(parseInt(c));
 
       child.position.set(pos.x, pos.y);
 
-      if (!this.isGrid) child.scale.set(pos.scale);
+      if (!this.isGrid) { child.scale.set(pos.scale); }
     }
   }
 
   sizeItem(i) {
-    let child = this.menuContainer.children[i];
-    if (!child)
+    const child = this.menuContainer.children[i];
+    if (!child) {
       return 2;
+    }
 
-    let scaleD = this.distanceFromCenter(i) / (this.w * 0.5);
-    let scale = 1.5 - Math.min(1, scaleD > 0.1 ? scaleD : 0);
+    const scaleD = this.distanceFromCenter(i) / (this.w * 0.5);
+    const scale = 1.5 - Math.min(1, scaleD > 0.1 ? scaleD : 0);
     return scale;
   }
 
   calculateItemPosition(i: number) {
-    let child = this.menuContainer.children[i];
-    if (!child)
+    const child = this.menuContainer.children[i];
+    if (!child) {
       return {
         x: 0,
         y: 0,
         scale: this.sizeItem(i)
       };
+    }
 
-    let baseH = this.itemHeight;
-    let baseW = this.itemWidth;
-    let scale = this.sizeItem(i);
+    const baseH = this.itemHeight;
+    const baseW = this.itemWidth;
+    const scale = this.sizeItem(i);
 
     if (this.isGrid) {
       return {
@@ -149,7 +152,7 @@ export class MenuComponent {
           (i * baseW) +
           this.itemWidth * i,
         y: baseH,
-        scale: scale
+        scale
       };
     }
   }
@@ -157,7 +160,7 @@ export class MenuComponent {
   stageMouseDown(event: any) {
     this.mouseDown = true;
     if (!this.dragging) {
-      let newPosition = event.data.getLocalPosition(this.container);
+      const newPosition = event.data.getLocalPosition(this.container);
       this.dragPoint.x = newPosition.x;
       this.dragPoint.y = newPosition.y;
       // this.menuContainer.pivot.set(this.dragPoint.x, this.isGrid ? this.dragPoint.y : 0);
@@ -175,9 +178,9 @@ export class MenuComponent {
     if (this.mouseDown) {
       this.dragging = true;
 
-      let newPosition = event.data.getLocalPosition(this.container);
+      const newPosition = event.data.getLocalPosition(this.container);
 
-      this.calcPosition(newPosition)
+      this.calcPosition(newPosition);
       this.dragPoint.x = newPosition.x;
       this.dragPoint.y = newPosition.y;
     }
@@ -185,20 +188,20 @@ export class MenuComponent {
 
 
   calcPosition(newP: any) {
-    let oldP = Object.assign({}, this.menuContainer.position)
-    let menuWidth = this.menuContainer.children.length * this.itemWidth;
-    let menuHeight = this.h;
+    const oldP = Object.assign({}, this.menuContainer.position);
+    const menuWidth = this.menuContainer.children.length * this.itemWidth;
+    const menuHeight = this.h;
 
     if (this.isGrid) {
       this.menuContainer.position.y -= this.dragPoint.y - newP.y;
 
-      if (this.menuContainer.position.y > this.y + menuHeight) this.menuContainer.position.y = this.y + menuHeight;
-      if (this.menuContainer.position.y < menuHeight * -1) this.menuContainer.position.y = menuHeight * -1;
+      if (this.menuContainer.position.y > this.y + menuHeight) { this.menuContainer.position.y = this.y + menuHeight; }
+      if (this.menuContainer.position.y < menuHeight * -1) { this.menuContainer.position.y = menuHeight * -1; }
     } else {
       this.menuContainer.position.x -= this.dragPoint.x - newP.x;
 
-      if (this.menuContainer.position.x > this.x + menuWidth) this.menuContainer.position.x = this.x + menuWidth;
-      if (this.menuContainer.position.x < menuWidth * -1) this.menuContainer.position.x = menuWidth * -1;
+      if (this.menuContainer.position.x > this.x + menuWidth) { this.menuContainer.position.x = this.x + menuWidth; }
+      if (this.menuContainer.position.x < menuWidth * -1) { this.menuContainer.position.x = menuWidth * -1; }
     }
   }
 }

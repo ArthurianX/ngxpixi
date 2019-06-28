@@ -1,12 +1,12 @@
 import { Component, ElementRef, Input } from '@angular/core';
 import * as PIXI from 'pixi.js';
-import { 
-	TweenLite, 
-	Circ, 
-	Sine, 
-	SlowMo, 
+import {
+	TweenLite,
+	Circ,
+	Sine,
+	SlowMo,
 	Power4
-} from "gsap";
+} from 'gsap';
 
 @Component({
   selector: 'filter-effect',
@@ -20,30 +20,32 @@ export class FilterComponent {
 
   filter: any;
   filterIndex: number;
-  
+
   constructor() {
   }
 
-  ngOnInit(){
-    switch(this.filterName){
+  ngOnInit() {
+    switch (this.filterName) {
       case 'blur':
         this.filter = new PIXI.filters.BlurFilter();
-        
-        for(let c in this.config)
+
+        for (const c in this.config) {
           this.filter[c] = this.config[c];
-          
+        }
+
         break;
     }
-    
-    if(this.container.filters)
+
+    if (this.container.filters) {
       this.container.filters.push( this.filter );
-    else
+    } else {
       this.container.filters = [ this.filter ];
-      
+    }
+
     this.filterIndex = this.container.filters.length - 1;
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.container.filters = null;
   }
 }

@@ -1,66 +1,66 @@
-import { Component, ElementRef, Input } from "@angular/core";
-import * as PIXI from "pixi.js";
-import { TweenLite, Circ, Sine, SlowMo, Power4 } from "gsap";
+import { Component, ElementRef, Input } from '@angular/core';
+import * as PIXI from 'pixi.js';
+import { TweenLite, Circ, Sine, SlowMo, Power4 } from 'gsap';
 
 @Component({
-  selector: "sprite",
+  selector: 'sprite',
   template: '<span></span>'
 })
 export class SpriteComponent {
   @Input()
   handleClick = null;
   @Input()
-  imgUrl: string = "";
+  imgUrl = '';
   @Input()
-  frameName: string = "";
+  frameName = '';
   @Input()
-  scale: number = 1;
+  scale = 1;
   @Input()
-  font: string = "Arial";
+  font = 'Arial';
   @Input()
-  fontSize: string = "48px";
+  fontSize = '48px';
   @Input()
-  strokeColor: string = "#000000";
+  strokeColor = '#000000';
   @Input()
-  interactive: boolean = true;
+  interactive = true;
 
   @Input()
-  _x: number = 0;
+  _x = 0;
   @Input()
   set x(val: number) {
     this._x = val || 0;
 
-    if (this.spriteObject) this.positionSprite();
+    if (this.spriteObject) { this.positionSprite(); }
   }
   get x(): number {
     return this._x;
   }
 
   @Input()
-  _y: number = 0;
+  _y = 0;
   @Input()
   set y(val: number) {
     this._y = val || 0;
 
-    if (this.spriteObject) this.positionSprite();
+    if (this.spriteObject) { this.positionSprite(); }
   }
   get y(): number {
     return this._y;
   }
 
   @Input()
-  text: string = "";
+  text = '';
   @Input()
   set valueToShow(val: string) {
-    this.text = val || "";
+    this.text = val || '';
 
-    if (this.textSpr) this.textSpr.text = this.text;
+    if (this.textSpr) { this.textSpr.text = this.text; }
   }
 
   @Input()
   container: PIXI.Container = null;
   @Input()
-  anim: string = "";
+  anim = '';
   @Input()
   anchor = { x: 0.5, y: 0.5 };
   @Input()
@@ -83,35 +83,36 @@ export class SpriteComponent {
     this.addSprite(this.imgUrl, this.frameName);
     this.addText(this.text);
 
-    if (this.container) this.container.addChild(this.spriteStage);
+    if (this.container) { this.container.addChild(this.spriteStage); }
 
-    if (this.anim == "hover") this.slowHover();
+    if (this.anim == 'hover') { this.slowHover(); }
 
-    if (this.handleClick && this.interactive)
+    if (this.handleClick && this.interactive) {
       this.addInteraction(this.handleClick);
+    }
   }
 
   addSprite(img, frame) {
-    if (img.trim() != "" || frame.trim() != "") {
-      let texture = img
+    if (img.trim() != '' || frame.trim() != '') {
+      const texture = img
         ? PIXI.Texture.from(img)
         : PIXI.Texture.from(frame);
 
-      //create sprite
+      // create sprite
       this.spriteObject = new PIXI.Sprite(texture);
       this.spriteObject.anchor.x = this.anchor.x;
       this.spriteObject.anchor.y = this.anchor.x;
 
-      //positioning and sizing
+      // positioning and sizing
       this.positionSprite();
 
-      //add to sprite container
+      // add to sprite container
       this.spriteStage.addChild(this.spriteObject);
     }
   }
 
   positionSprite() {
-    if (!this.spriteObject) return;
+    if (!this.spriteObject) { return; }
 
     this.spriteObject.scale.set(this.scale);
     (this.spriteObject.position.x = this._x),
@@ -122,11 +123,11 @@ export class SpriteComponent {
     if (this.textSpr) {
       this.textSpr.text = text;
     } else {
-      if (text.toString().trim() != "") {
-        let t = new PIXI.Text(text, {
+      if (text.toString().trim() != '') {
+        const t = new PIXI.Text(text, {
           fontFamily: this.font,
           fontSize: this.fontSize,
-          fill: "white",
+          fill: 'white',
           stroke: this.strokeColor,
           strokeThickness: 4
         });
@@ -144,20 +145,20 @@ export class SpriteComponent {
   }
 
   addInteraction(cb) {
-    if (!this.spriteObject) return;
+    if (!this.spriteObject) { return; }
 
     this.spriteObject.interactive = true;
 
-    if (this.anim == "explode") {
+    if (this.anim == 'explode') {
       this.spriteObject
-        .on("tap", () => {
+        .on('tap', () => {
           this.explodeOut().then(cb);
         })
-        .on("click", () => {
+        .on('click', () => {
           this.explodeOut().then(cb);
         });
     } else {
-      this.spriteObject.on("tap", cb).on("click", cb);
+      this.spriteObject.on('tap', cb).on('click', cb);
     }
   }
 
@@ -167,7 +168,7 @@ export class SpriteComponent {
 
   hoverUp() {
     TweenLite.to(this.spriteObject.position, 3, {
-      y: "-=30",
+      y: '-=30',
       ease: Sine.easeInOut,
       onComplete: this.hoverDown.bind(this)
     });
@@ -175,7 +176,7 @@ export class SpriteComponent {
 
   hoverDown() {
     TweenLite.to(this.spriteObject.position, 4, {
-      y: "+=30",
+      y: '+=30',
       ease: Sine.easeInOut,
       onComplete: this.hoverUp.bind(this)
     });
@@ -195,8 +196,10 @@ export class SpriteComponent {
   }
 
   ngOnDestroy() {
-    if (this.spriteStage)
-      if (this.spriteStage.parent)
+    if (this.spriteStage) {
+      if (this.spriteStage.parent) {
         this.spriteStage.parent.removeChild(this.spriteStage);
+    }
+      }
   }
 }
